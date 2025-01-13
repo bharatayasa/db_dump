@@ -4,25 +4,22 @@ const path = require('path');
 
 // Konfigurasi URL database dan output
 const config = {
-    databaseUrl: "postgresql://postgres:postgres@192.168.199.8:5432/rabbitmq_pod",
+    // databaseUrl: "postgresql://postgres:root@localhost:5432/local_regenesis_admin_dev",
+    databaseUrl: "postgresql://postgres:postgres@192.168.199.8:5432/regenesis_admin_dev_be",
     outputDir: './dumps',
-    outputFile: 'dump.sql',
+    outputFile: 'regenesis_admin_dev_be.sql',
 };
 
-// Buat direktori output jika belum ada
 if (!fs.existsSync(config.outputDir)) {
     fs.mkdirSync(config.outputDir, { recursive: true });
 }
 
-// Lokasi output file
 const outputPath = path.resolve(config.outputDir, config.outputFile);
 
-// Perintah pg_dump menggunakan DATABASE_URL dengan format plain text dan opsi --inserts
 const command = `pg_dump -Fp --inserts "${config.databaseUrl}" -f "${outputPath}"`;
 
 console.log(`Menjalankan perintah: ${command}`);
 
-// Jalankan perintah
 exec(command, (error, stdout, stderr) => {
     if (error) {
         console.error(`Error saat dump database: ${error.message}`);
