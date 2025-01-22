@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.0
+-- Dumped from database version 17.2 (Debian 17.2-1.pgdg120+1)
 -- Dumped by pg_dump version 17.0
 
 SET statement_timeout = 0;
@@ -16,22 +16,6 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
-
---
--- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
---
-
--- *not* creating schema, since initdb creates it
-
-
-ALTER SCHEMA public OWNER TO postgres;
-
---
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
---
-
-COMMENT ON SCHEMA public IS '';
-
 
 --
 -- Name: app_version_status; Type: TYPE; Schema: public; Owner: postgres
@@ -297,10 +281,10 @@ ALTER TABLE public.firmware_version OWNER TO postgres;
 
 CREATE TABLE public."group" (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
-    group_name text,
     created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     deleted_at timestamp(6) without time zone,
-    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    group_name text
 );
 
 
@@ -662,14 +646,12 @@ ALTER TABLE ONLY public.terms_and_conditions_questions ALTER COLUMN id SET DEFAU
 -- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public._prisma_migrations VALUES ('7a52f14c-c26e-4c20-8b93-f8a17d683127', 'db53d327e07d4b8fef398df2802a513268079b665b1472b7df3c24594064838a', '2025-01-13 10:41:20.184404+08', '20250111040841_init', NULL, NULL, '2025-01-13 10:41:20.065488+08', 1);
-INSERT INTO public._prisma_migrations VALUES ('257d5a7f-438d-4f66-89cc-35232e5a4a78', 'f3e56860fcab8fee491175b1b1c90ca8802c977e058e207eb0a28238a12734db', '2025-01-13 10:41:20.207834+08', '20250111062433_relation_pod_as_spread_sheet', NULL, NULL, '2025-01-13 10:41:20.185728+08', 1);
-INSERT INTO public._prisma_migrations VALUES ('713db519-1306-4b7f-bfcc-4878d2216a6f', '27a7b662f5189d879bb7a557937abf04d2f4486ae4184ef54bb822974c4e41da', '2025-01-13 10:41:20.222921+08', '20250111064810_atribute_table', NULL, NULL, '2025-01-13 10:41:20.209141+08', 1);
-INSERT INTO public._prisma_migrations VALUES ('80beb15a-bbac-4614-9d34-72bd31401abf', '698752460521bd0b43c7407b652171dc100dee9e93a81c4fcb40ca57b4e83d96', '2025-01-13 10:41:20.225573+08', '20250111072507_customer_table', NULL, NULL, '2025-01-13 10:41:20.223614+08', 1);
-INSERT INTO public._prisma_migrations VALUES ('7967b053-b94f-4665-8207-0690b292c050', 'a7a22b839413dfacbf43872406030dc1234cc4731261dda9f873c4c6781ea874', '2025-01-13 10:41:20.229524+08', '20250112142134_group_name', NULL, NULL, '2025-01-13 10:41:20.226248+08', 1);
-INSERT INTO public._prisma_migrations VALUES ('099556b0-06b3-4a33-bd48-f9ea351b5384', 'cafe73d267428b09afb56b1d2e8acb7c15c6a71c30ef86bf0148df42d54b5497', '2025-01-13 10:41:20.238887+08', '20250112143104_datatype_phonr', NULL, NULL, '2025-01-13 10:41:20.230165+08', 1);
-INSERT INTO public._prisma_migrations VALUES ('43259b92-b993-48a8-ab44-f00a3220b3c2', 'dbbfff4c59814706d4b350059788cbc80ef56480c4519fa83da18d0b9b924e60', '2025-01-13 10:41:20.24714+08', '20250112143306_datatype_phone', NULL, NULL, '2025-01-13 10:41:20.239644+08', 1);
-INSERT INTO public._prisma_migrations VALUES ('fa139598-5cc9-4fa2-a020-bdbc43871127', '0c257504590178eba5494d8efb2640549bee79c9e654b14ec49f3c3f85148cff', '2025-01-13 10:41:22.310237+08', '20250113024122_add_atribute_date', NULL, NULL, '2025-01-13 10:41:22.294264+08', 1);
+INSERT INTO public._prisma_migrations VALUES ('dd701c99-12d1-4630-b990-79ffdefbe251', 'db53d327e07d4b8fef398df2802a513268079b665b1472b7df3c24594064838a', '2025-01-13 03:59:54.848411+00', '20250111040841_init', NULL, NULL, '2025-01-13 03:59:54.626135+00', 1);
+INSERT INTO public._prisma_migrations VALUES ('43385193-aa35-42cf-8920-06f9760fcc56', 'f3e56860fcab8fee491175b1b1c90ca8802c977e058e207eb0a28238a12734db', '2025-01-13 03:59:55.110029+00', '20250111062433_relation_pod_as_spread_sheet', NULL, NULL, '2025-01-13 03:59:54.918726+00', 1);
+INSERT INTO public._prisma_migrations VALUES ('1fbbd60a-1eee-452f-9e23-1c4e28b8dd9b', '27a7b662f5189d879bb7a557937abf04d2f4486ae4184ef54bb822974c4e41da', '2025-01-13 03:59:55.373622+00', '20250111064810_atribute_table', NULL, NULL, '2025-01-13 03:59:55.177476+00', 1);
+INSERT INTO public._prisma_migrations VALUES ('8ca6be76-c782-4dda-bc9d-08291436a3c4', '698752460521bd0b43c7407b652171dc100dee9e93a81c4fcb40ca57b4e83d96', '2025-01-13 03:59:55.638383+00', '20250111072507_customer_table', NULL, NULL, '2025-01-13 03:59:55.445368+00', 1);
+INSERT INTO public._prisma_migrations VALUES ('81dd350f-b888-4eaa-8918-36d10d2f6418', '0c257504590178eba5494d8efb2640549bee79c9e654b14ec49f3c3f85148cff', '2025-01-13 03:59:55.904259+00', '20250113024122_add_atribute_date', NULL, NULL, '2025-01-13 03:59:55.708194+00', 1);
+INSERT INTO public._prisma_migrations VALUES ('bdf02e55-d768-4ed1-8087-22193b21ecb9', 'f49a412b439a8c3b115c54a404a6d4e5e1cdc18482462117d838a330131a2ae8', '2025-01-13 03:59:56.21043+00', '20250113025335_add_atribute_date', NULL, NULL, '2025-01-13 03:59:55.993177+00', 1);
 
 
 --
@@ -688,7 +670,8 @@ INSERT INTO public._prisma_migrations VALUES ('fa139598-5cc9-4fa2-a020-bdbc43871
 -- Data for Name: app_version; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-13 10:44:33.389+08', '2025-01-13 10:44:33.389+08', NULL, 'f6236271-a9d9-4604-a95f-da29726e23bb', 'ok ok ok', '1.2.0', 'active');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-13 07:48:45.36+00', '2025-01-13 07:48:45.36+00', NULL, '32609c9c-6fe7-4715-8513-4a2dfb7c305a', 'ok ok ok', '1.2.0', 'active');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-13 02:44:33.389+00', '2025-01-13 02:44:33.389+00', NULL, 'f6236271-a9d9-4604-a95f-da29726e23bb', 'ok ok ok', '2.2.2', 'active');
 
 
 --
@@ -701,7 +684,12 @@ INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '
 -- Data for Name: customer; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.customer VALUES ('2b120081-ac63-4990-bbd0-ee0ac005e262', 'dubai', 'tes ', '123456789101111', '2025-01-13 10:47:42.978678+08', NULL, '2025-01-13 10:47:42.978678+08');
+INSERT INTO public.customer VALUES ('c2cea37a-28f8-41dc-86ba-8384a03facb0', 'qatar', 'tes ', '123456789101111', '2025-01-13 08:54:03.352+00', NULL, '2025-01-13 08:54:03.352+00');
+INSERT INTO public.customer VALUES ('2b120081-ac63-4990-bbd0-ee0ac005e262', 'qatar', 'update ', '123456789101111', '2025-01-13 02:47:42.978678+00', NULL, '2025-01-13 02:47:42.978678+00');
+INSERT INTO public.customer VALUES ('cc3c034d-d88a-4dab-8160-5fb30f351317', 'Qatar', 'Test customer', '123456789101111', '2025-01-13 10:44:27.374+00', NULL, '2025-01-13 10:44:27.374+00');
+INSERT INTO public.customer VALUES ('c90055b9-a18f-41e3-8234-e9f17ab68d97', 'Qatar', 'Test customer', '123456789101111', '2025-01-13 10:48:14.493+00', NULL, '2025-01-13 10:48:14.493+00');
+INSERT INTO public.customer VALUES ('0c38ce25-0a58-4a58-90af-8a4cba5f4278', 'Qatar', 'Test customer', '123456789101111', '2025-01-13 11:12:11.237+00', NULL, '2025-01-13 11:12:11.237+00');
+INSERT INTO public.customer VALUES ('c906e0c8-5acc-4ede-a238-03e7971971fa', 'Qatar', 'Test customer', '123456789101111', '2025-01-13 11:25:22.792+00', NULL, '2025-01-13 11:25:22.792+00');
 
 
 --
@@ -726,14 +714,21 @@ INSERT INTO public.customer VALUES ('2b120081-ac63-4990-bbd0-ee0ac005e262', 'dub
 -- Data for Name: firmware_version; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.firmware_version VALUES ('3d486e78-ecf7-4823-92dc-2a6c90db24b8', 'FIRMWARE001', 'Light v1.0', 'Chair v2.0', 'Olvactory v1.5', 'Manual v3.0', 'AC v4.1', 'Volume v2.2', 'Door v1.1', 'active', '2025-01-13 10:48:10.695074+08', NULL, '2025-01-13 10:48:10.695074+08');
+INSERT INTO public.firmware_version VALUES ('452e684e-4cce-43af-bd0b-53423d4773e8', 'FIRMWARE001', 'Light v1.0', 'Chair v2.0', 'Olvactory v1.5', 'Manual v3.0', 'AC v4.1', 'Volume v2.2', 'Door v1.1', 'active', '2025-01-13 08:31:19.555+00', NULL, '2025-01-13 08:31:19.555+00');
+INSERT INTO public.firmware_version VALUES ('4a758927-9e91-4391-9846-98363457346f', 'FIRMWARE001', 'Light v1.0', 'Chair v2.0', 'Olvactory v1.5', 'Manual v3.0', 'AC v4.1', 'Volume v2.2', 'Door v1.1', 'active', '2025-01-13 08:32:00.23+00', NULL, '2025-01-13 08:32:00.23+00');
+INSERT INTO public.firmware_version VALUES ('3d486e78-ecf7-4823-92dc-2a6c90db24b8', 'UPDATE001', 'Light v1.0', 'Chair v2.0', 'Olvactory v1.5', 'Manual v3.0', 'AC v4.1', 'Volume v2.2', 'Door v1.1', 'active', '2025-01-13 02:48:10.695074+00', NULL, '2025-01-13 02:48:10.695074+00');
+INSERT INTO public.firmware_version VALUES ('1b931026-29ae-46f7-a352-bd7dc48221fa', 'FIRMWARE001', 'Light v1.0', 'Chair v2.0', 'Olvactory v1.5', 'Manual v3.0', 'AC v4.1', 'Volume v2.2', 'Door v1.1', 'active', '2025-01-13 10:44:26.692+00', NULL, '2025-01-13 10:44:26.692+00');
+INSERT INTO public.firmware_version VALUES ('b3a26b6e-3699-4a13-86d8-76c877658c71', 'BARU001', 'Light v1.0', 'Chair v2.0', 'Olvactory v1.5', 'Manual v3.0', 'AC v4.1', 'Volume v2.2', 'Door v1.1', 'active', '2025-01-13 10:48:13.939+00', NULL, '2025-01-13 10:48:13.939+00');
+INSERT INTO public.firmware_version VALUES ('53bd3425-82f8-4871-a1d1-134f58ffee1a', 'BARU001', 'Light v1.0', 'Chair v2.0', 'Olvactory v1.5', 'Manual v3.0', 'AC v4.1', 'Volume v2.2', 'Door v1.1', 'active', '2025-01-13 11:12:11.109+00', NULL, '2025-01-13 11:12:11.109+00');
+INSERT INTO public.firmware_version VALUES ('14bbe30e-6a51-433e-820b-b22d9c7c015b', 'BARU001', 'Light v1.0', 'Chair v2.0', 'Olvactory v1.5', 'Manual v3.0', 'AC v4.1', 'Volume v2.2', 'Door v1.1', 'active', '2025-01-13 11:25:22.785+00', NULL, '2025-01-13 11:25:22.785+00');
 
 
 --
 -- Data for Name: group; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public."group" VALUES ('1918d258-38c9-4932-9ec4-e1206497c55d', 'Group A', '2025-01-13 10:47:07.463965+08', NULL, '2025-01-13 10:47:07.463965+08');
+INSERT INTO public."group" VALUES ('1918d258-38c9-4932-9ec4-e1206497c55d', '2025-01-13 04:02:53.475924+00', NULL, '2025-01-13 04:02:53.475924+00', 'Group A');
+INSERT INTO public."group" VALUES ('0359deb2-92f3-4184-8a9b-658e30e628ae', '2025-01-13 05:59:24.525+00', NULL, '2025-01-13 05:59:24.525+00', 'Group B');
 
 
 --
@@ -752,7 +747,8 @@ INSERT INTO public."group" VALUES ('1918d258-38c9-4932-9ec4-e1206497c55d', 'Grou
 -- Data for Name: pod; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.pod VALUES ('bd09c2ef-b615-4cf4-b77c-1d8d05c03555', 'POD001', 'Pod Device A', 'http://example.com', 'Pod Identification A', '192.168.1.1', '2025-01-13 10:48:13.719+08', '2025-01-13 10:48:13.719+08', NULL, 'f6236271-a9d9-4604-a95f-da29726e23bb', '12.345678', '98.765432', 'Amplifier A', '2b120081-ac63-4990-bbd0-ee0ac005e262', '00:11:22:33:44:55', '1.0.0', 'SN123456789', '1.0.0', 'SoundCard A', '2025-01-10 12:00:00', '1918d258-38c9-4932-9ec4-e1206497c55d', '3d486e78-ecf7-4823-92dc-2a6c90db24b8');
+INSERT INTO public.pod VALUES ('eff4c22e-b863-4947-8b1a-84756d7b233f', 'POD001', 'Pod Device A', 'http://example.com', 'Pod Identification A', '192.168.1.1', '2025-01-13 11:25:22.796+00', '2025-01-13 11:25:22.796+00', NULL, 'f6236271-a9d9-4604-a95f-da29726e23bb', '12.345678', '98.765432', 'Amplifier A', 'c906e0c8-5acc-4ede-a238-03e7971971fa', '00:11:22:33:44:55', '1.0.0', 'SN123456789', '1.0.0', 'SoundCard A', '2025-01-10 12:00:00', '1918d258-38c9-4932-9ec4-e1206497c55d', '14bbe30e-6a51-433e-820b-b22d9c7c015b');
+INSERT INTO public.pod VALUES ('7ee2b1d5-27db-4854-bf24-f82184ef865d', 'POD001', 'Pod Device A', 'http://example.com', 'Pod Identification A', '192.168.1.1', '2025-01-13 11:25:47.138+00', '2025-01-13 11:25:47.138+00', NULL, 'f6236271-a9d9-4604-a95f-da29726e23bb', '12.345678', '98.765432', 'Amplifier A', 'c2cea37a-28f8-41dc-86ba-8384a03facb0', '00:11:22:33:44:55', '1.0.0', 'SN123456789', '1.0.0', 'SoundCard A', '2025-01-10 12:00:00', '1918d258-38c9-4932-9ec4-e1206497c55d', '452e684e-4cce-43af-bd0b-53423d4773e8');
 
 
 --
@@ -813,21 +809,24 @@ INSERT INTO public.pod VALUES ('bd09c2ef-b615-4cf4-b77c-1d8d05c03555', 'POD001',
 -- Data for Name: version_big_screen; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.version_big_screen VALUES ('503976d3-7d8b-4b4f-8b76-e6cb75d78c3f', '1736736273366-448558784.jpg', '2025-01-13 10:44:33.389+08', '2025-01-13 10:44:33.389+08', NULL, 'signature_big_screen', '1.0.0', NULL, 'f6236271-a9d9-4604-a95f-da29726e23bb');
+INSERT INTO public.version_big_screen VALUES ('503976d3-7d8b-4b4f-8b76-e6cb75d78c3f', '1736736273366-448558784.jpg', '2025-01-13 02:44:33.389+00', '2025-01-13 02:44:33.389+00', NULL, 'signature_big_screen', '1.0.0', NULL, 'f6236271-a9d9-4604-a95f-da29726e23bb');
+INSERT INTO public.version_big_screen VALUES ('30d6becb-8a37-4799-9cc6-aa499184f51b', '1736754525320-213270164.jpg', '2025-01-13 07:48:45.36+00', '2025-01-13 07:48:45.36+00', NULL, 'signature_big_screen', '1.0.0', NULL, '32609c9c-6fe7-4715-8513-4a2dfb7c305a');
 
 
 --
 -- Data for Name: version_mobile_api; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.version_mobile_api VALUES ('f1684953-6403-4b68-8400-bddec7071623', '1736736273367-604275099.jpg', '2025-01-13 10:44:33.389+08', '2025-01-13 10:44:33.389+08', NULL, 'signature_mobile_api', '1.0.0', '2025-01-13 02:44:33.389', 'f6236271-a9d9-4604-a95f-da29726e23bb');
+INSERT INTO public.version_mobile_api VALUES ('f1684953-6403-4b68-8400-bddec7071623', '1736736273367-604275099.jpg', '2025-01-13 02:44:33.389+00', '2025-01-13 02:44:33.389+00', NULL, 'signature_mobile_api', '1.0.0', '2025-01-13 02:44:33.389', 'f6236271-a9d9-4604-a95f-da29726e23bb');
+INSERT INTO public.version_mobile_api VALUES ('bb20867b-d6bf-4905-b9b8-e13e5d8ba23e', '1736754525355-612639271.jpg', '2025-01-13 07:48:45.36+00', '2025-01-13 07:48:45.36+00', NULL, 'signature_mobile_api', '1.0.0', '2025-01-13 07:48:45.36', '32609c9c-6fe7-4715-8513-4a2dfb7c305a');
 
 
 --
 -- Data for Name: version_small_screen; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.version_small_screen VALUES ('84f9340f-34ad-4a27-a2da-bcb2aa67936f', '1736736273367-25435325.jpg', '2025-01-13 10:44:33.389+08', '2025-01-13 10:44:33.389+08', NULL, 'signature_small_screen', '1.0.0', '2025-01-13 02:44:33.389', 'f6236271-a9d9-4604-a95f-da29726e23bb');
+INSERT INTO public.version_small_screen VALUES ('84f9340f-34ad-4a27-a2da-bcb2aa67936f', '1736736273367-25435325.jpg', '2025-01-13 02:44:33.389+00', '2025-01-13 02:44:33.389+00', NULL, 'signature_small_screen', '1.0.0', '2025-01-13 02:44:33.389', 'f6236271-a9d9-4604-a95f-da29726e23bb');
+INSERT INTO public.version_small_screen VALUES ('f0219201-2819-4c96-836d-d573bc5a7253', '1736754525353-23177037.jpg', '2025-01-13 07:48:45.36+00', '2025-01-13 07:48:45.36+00', NULL, 'signature_small_screen', '1.0.0', '2025-01-13 07:48:45.36', '32609c9c-6fe7-4715-8513-4a2dfb7c305a');
 
 
 --
@@ -1285,13 +1284,6 @@ ALTER TABLE ONLY public.version_mobile_api
 
 ALTER TABLE ONLY public.version_small_screen
     ADD CONSTRAINT version_small_screen_fk_app_version_id_fkey FOREIGN KEY (fk_app_version_id) REFERENCES public.app_version(id) ON UPDATE CASCADE ON DELETE RESTRICT;
-
-
---
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
---
-
-REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 
 
 --

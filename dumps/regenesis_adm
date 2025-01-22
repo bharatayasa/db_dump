@@ -1,0 +1,1402 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 16.6 (Debian 16.6-1.pgdg120+1)
+-- Dumped by pg_dump version 17.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: app_version_status; Type: TYPE; Schema: public; Owner: recharge
+--
+
+CREATE TYPE public.app_version_status AS ENUM (
+    'active',
+    'nonactive'
+);
+
+
+ALTER TYPE public.app_version_status OWNER TO recharge;
+
+--
+-- Name: firmware_version_status; Type: TYPE; Schema: public; Owner: recharge
+--
+
+CREATE TYPE public.firmware_version_status AS ENUM (
+    'active',
+    'nonactive'
+);
+
+
+ALTER TYPE public.firmware_version_status OWNER TO recharge;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: _prisma_migrations; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public._prisma_migrations (
+    id character varying(36) NOT NULL,
+    checksum character varying(64) NOT NULL,
+    finished_at timestamp with time zone,
+    migration_name character varying(255) NOT NULL,
+    logs text,
+    rolled_back_at timestamp with time zone,
+    started_at timestamp with time zone DEFAULT now() NOT NULL,
+    applied_steps_count integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public._prisma_migrations OWNER TO recharge;
+
+--
+-- Name: admin; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.admin (
+    user_id uuid DEFAULT gen_random_uuid() NOT NULL,
+    full_names text NOT NULL,
+    username text,
+    email text NOT NULL,
+    password text NOT NULL,
+    reset_token character varying(255),
+    reset_token_expiration timestamp(6) without time zone,
+    otp_verified boolean DEFAULT false,
+    created_at timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    role_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.admin OWNER TO recharge;
+
+--
+-- Name: agreement; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.agreement (
+    id smallint NOT NULL,
+    agreement text,
+    active boolean DEFAULT true NOT NULL,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    tooltip text
+);
+
+
+ALTER TABLE public.agreement OWNER TO recharge;
+
+--
+-- Name: agreement_id_seq; Type: SEQUENCE; Schema: public; Owner: recharge
+--
+
+CREATE SEQUENCE public.agreement_id_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.agreement_id_seq OWNER TO recharge;
+
+--
+-- Name: agreement_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: recharge
+--
+
+ALTER SEQUENCE public.agreement_id_seq OWNED BY public.agreement.id;
+
+
+--
+-- Name: app_version; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.app_version (
+    description text NOT NULL,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    notes text,
+    version text NOT NULL,
+    app_version_status public.app_version_status DEFAULT 'active'::public.app_version_status NOT NULL,
+    pub_date timestamp(3) without time zone
+);
+
+
+ALTER TABLE public.app_version OWNER TO recharge;
+
+--
+-- Name: colours; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.colours (
+    color_id uuid DEFAULT gen_random_uuid() NOT NULL,
+    color_code character varying(50) NOT NULL,
+    code_number integer NOT NULL,
+    created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone
+);
+
+
+ALTER TABLE public.colours OWNER TO recharge;
+
+--
+-- Name: customer; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.customer (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    address text,
+    description text,
+    phone character varying(15),
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.customer OWNER TO recharge;
+
+--
+-- Name: detail_experience; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.detail_experience (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    stroboscopic_light smallint NOT NULL,
+    audio_surround_sound smallint NOT NULL,
+    vibro_acoustics smallint NOT NULL,
+    led_intensity smallint NOT NULL,
+    led_color smallint NOT NULL,
+    sound_scape integer NOT NULL,
+    infra_red_nea_ir smallint NOT NULL,
+    infra_red_far_ir smallint NOT NULL,
+    pemf_therapy boolean NOT NULL,
+    olfactory_engagement boolean NOT NULL,
+    binaural_beats_isochronic_tones boolean NOT NULL,
+    direct_neutral_stimulation boolean NOT NULL,
+    duration numeric(5,2) NOT NULL,
+    created_at timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) with time zone,
+    experience_id uuid NOT NULL,
+    song text,
+    video text
+);
+
+
+ALTER TABLE public.detail_experience OWNER TO recharge;
+
+--
+-- Name: experiences; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.experiences (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    link_class text NOT NULL,
+    icon_class text NOT NULL,
+    icon_name text NOT NULL,
+    menu_name text NOT NULL,
+    information text,
+    active boolean DEFAULT true NOT NULL,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP,
+    deleted_at timestamp(6) without time zone,
+    mode_id uuid,
+    pod_id uuid
+);
+
+
+ALTER TABLE public.experiences OWNER TO recharge;
+
+--
+-- Name: experiences_properties; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.experiences_properties (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    circle_line_color text NOT NULL,
+    circle_line_width double precision NOT NULL,
+    circle_fill_color text NOT NULL,
+    circle_icon text NOT NULL,
+    circle_caption text NOT NULL,
+    circle_size double precision NOT NULL,
+    enable_disable_session boolean NOT NULL,
+    "order" smallint NOT NULL,
+    tooltip text NOT NULL,
+    icon text,
+    created_at timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) with time zone,
+    experience_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.experiences_properties OWNER TO recharge;
+
+--
+-- Name: firmware_version; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.firmware_version (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    firmware_id text,
+    light_version text,
+    chair_version text,
+    olvactory_version text,
+    manual_controll_version text,
+    air_condition_version text,
+    volume_controll_version text,
+    door_version text,
+    firmware_version_status public.firmware_version_status DEFAULT 'active'::public.firmware_version_status NOT NULL,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.firmware_version OWNER TO recharge;
+
+--
+-- Name: group; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public."group" (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    group_name text
+);
+
+
+ALTER TABLE public."group" OWNER TO recharge;
+
+--
+-- Name: issues; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.issues (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    fk_pod_id uuid NOT NULL,
+    link_issue text,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.issues OWNER TO recharge;
+
+--
+-- Name: mode; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.mode (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    button_name text NOT NULL,
+    disabled boolean DEFAULT false NOT NULL,
+    active boolean DEFAULT true NOT NULL,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) with time zone
+);
+
+
+ALTER TABLE public.mode OWNER TO recharge;
+
+--
+-- Name: pod; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.pod (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    code text NOT NULL,
+    name text NOT NULL,
+    url text NOT NULL,
+    identification text NOT NULL,
+    ip_address text NOT NULL,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    fk_app_version uuid NOT NULL,
+    latitude text,
+    longitude text,
+    amplifier text,
+    fk_customer uuid NOT NULL,
+    mac_address_bluetooth text,
+    pod_version text,
+    serial_number text,
+    server_version text,
+    soundcard_name text,
+    start_deploy timestamp(3) without time zone,
+    fk_group_id uuid NOT NULL,
+    fk_firmware_version uuid NOT NULL
+);
+
+
+ALTER TABLE public.pod OWNER TO recharge;
+
+--
+-- Name: podAdmin; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public."podAdmin" (
+    "podId" uuid DEFAULT gen_random_uuid() NOT NULL,
+    "group" text NOT NULL,
+    code text NOT NULL,
+    name text NOT NULL,
+    location text NOT NULL,
+    ip_address text NOT NULL,
+    created_at timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(3) without time zone NOT NULL,
+    deleted_at timestamp(3) without time zone
+);
+
+
+ALTER TABLE public."podAdmin" OWNER TO recharge;
+
+--
+-- Name: pod_history; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.pod_history (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    fk_pod_id uuid NOT NULL,
+    fk_pod_topic_id uuid NOT NULL,
+    action text,
+    value jsonb,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.pod_history OWNER TO recharge;
+
+--
+-- Name: pod_topics; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.pod_topics (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    module_name text,
+    event_description text,
+    topic text,
+    action text,
+    retain boolean,
+    publish_example_value jsonb,
+    subscribe_example_value jsonb,
+    value_range text,
+    remarks text,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    keyword text,
+    deleted_at timestamp(6) without time zone
+);
+
+
+ALTER TABLE public.pod_topics OWNER TO recharge;
+
+--
+-- Name: roles; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.roles (
+    user_id uuid DEFAULT gen_random_uuid() NOT NULL,
+    role_name text NOT NULL,
+    created_at timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone
+);
+
+
+ALTER TABLE public.roles OWNER TO recharge;
+
+--
+-- Name: terms_and_conditions; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.terms_and_conditions (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    terms_and_conditions text,
+    active boolean DEFAULT true NOT NULL,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone
+);
+
+
+ALTER TABLE public.terms_and_conditions OWNER TO recharge;
+
+--
+-- Name: terms_and_conditions_accepted; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.terms_and_conditions_accepted (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    fk_user_id uuid NOT NULL,
+    accepted boolean DEFAULT false NOT NULL,
+    accepted_date timestamp(6) with time zone,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone
+);
+
+
+ALTER TABLE public.terms_and_conditions_accepted OWNER TO recharge;
+
+--
+-- Name: terms_and_conditions_answers; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.terms_and_conditions_answers (
+    id smallint NOT NULL,
+    fk_user_id uuid NOT NULL,
+    fk_question_id smallint NOT NULL,
+    answer boolean DEFAULT false NOT NULL,
+    answer_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone
+);
+
+
+ALTER TABLE public.terms_and_conditions_answers OWNER TO recharge;
+
+--
+-- Name: terms_and_conditions_answers_id_seq; Type: SEQUENCE; Schema: public; Owner: recharge
+--
+
+CREATE SEQUENCE public.terms_and_conditions_answers_id_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.terms_and_conditions_answers_id_seq OWNER TO recharge;
+
+--
+-- Name: terms_and_conditions_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: recharge
+--
+
+ALTER SEQUENCE public.terms_and_conditions_answers_id_seq OWNED BY public.terms_and_conditions_answers.id;
+
+
+--
+-- Name: terms_and_conditions_questions; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.terms_and_conditions_questions (
+    id smallint NOT NULL,
+    question text NOT NULL,
+    information text,
+    active boolean DEFAULT true NOT NULL,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    tooltip text
+);
+
+
+ALTER TABLE public.terms_and_conditions_questions OWNER TO recharge;
+
+--
+-- Name: terms_and_conditions_questions_id_seq; Type: SEQUENCE; Schema: public; Owner: recharge
+--
+
+CREATE SEQUENCE public.terms_and_conditions_questions_id_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.terms_and_conditions_questions_id_seq OWNER TO recharge;
+
+--
+-- Name: terms_and_conditions_questions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: recharge
+--
+
+ALTER SEQUENCE public.terms_and_conditions_questions_id_seq OWNED BY public.terms_and_conditions_questions.id;
+
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public."user" (
+    user_id uuid DEFAULT gen_random_uuid() NOT NULL,
+    full_names text NOT NULL,
+    username text,
+    email text NOT NULL,
+    password text NOT NULL,
+    is_test_user boolean DEFAULT false,
+    reset_token character varying(255),
+    reset_token_expiration timestamp(6) without time zone,
+    otp_verified boolean DEFAULT false,
+    created_at timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone
+);
+
+
+ALTER TABLE public."user" OWNER TO recharge;
+
+--
+-- Name: version_big_screen; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.version_big_screen (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    file text NOT NULL,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    signature text,
+    big_screen_version text,
+    date_realese timestamp(3) without time zone,
+    fk_app_version_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.version_big_screen OWNER TO recharge;
+
+--
+-- Name: version_mobile_api; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.version_mobile_api (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    file text NOT NULL,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    signature text,
+    mobile_api_version text,
+    date_realese timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    fk_app_version_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.version_mobile_api OWNER TO recharge;
+
+--
+-- Name: version_small_screen; Type: TABLE; Schema: public; Owner: recharge
+--
+
+CREATE TABLE public.version_small_screen (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    file text NOT NULL,
+    created_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_date timestamp(6) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    signature text,
+    small_screen_version text,
+    date_realese timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    fk_app_version_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.version_small_screen OWNER TO recharge;
+
+--
+-- Name: agreement id; Type: DEFAULT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.agreement ALTER COLUMN id SET DEFAULT nextval('public.agreement_id_seq'::regclass);
+
+
+--
+-- Name: terms_and_conditions_answers id; Type: DEFAULT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.terms_and_conditions_answers ALTER COLUMN id SET DEFAULT nextval('public.terms_and_conditions_answers_id_seq'::regclass);
+
+
+--
+-- Name: terms_and_conditions_questions id; Type: DEFAULT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.terms_and_conditions_questions ALTER COLUMN id SET DEFAULT nextval('public.terms_and_conditions_questions_id_seq'::regclass);
+
+
+--
+-- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+INSERT INTO public._prisma_migrations VALUES ('5c79a1b3-fcd8-434a-a399-b0a300051c5d', 'db53d327e07d4b8fef398df2802a513268079b665b1472b7df3c24594064838a', '2025-01-15 02:11:14.534364+00', '20250111040841_init', NULL, NULL, '2025-01-15 02:11:14.199039+00', 1);
+INSERT INTO public._prisma_migrations VALUES ('a08b7a80-5351-4040-8ff5-e6a727d32bed', 'f3e56860fcab8fee491175b1b1c90ca8802c977e058e207eb0a28238a12734db', '2025-01-15 02:11:14.797465+00', '20250111062433_relation_pod_as_spread_sheet', NULL, NULL, '2025-01-15 02:11:14.6011+00', 1);
+INSERT INTO public._prisma_migrations VALUES ('a4896a39-75f5-4b45-97e7-3469b1a66a42', '27a7b662f5189d879bb7a557937abf04d2f4486ae4184ef54bb822974c4e41da', '2025-01-15 02:11:15.064013+00', '20250111064810_atribute_table', NULL, NULL, '2025-01-15 02:11:14.866435+00', 1);
+INSERT INTO public._prisma_migrations VALUES ('4d451713-bfdc-4c26-8f4f-297476f94686', '698752460521bd0b43c7407b652171dc100dee9e93a81c4fcb40ca57b4e83d96', '2025-01-15 02:11:15.339162+00', '20250111072507_customer_table', NULL, NULL, '2025-01-15 02:11:15.140142+00', 1);
+INSERT INTO public._prisma_migrations VALUES ('1b6eb789-a07f-468c-95d0-72a72537d727', '0c257504590178eba5494d8efb2640549bee79c9e654b14ec49f3c3f85148cff', '2025-01-15 02:11:15.59476+00', '20250113024122_add_atribute_date', NULL, NULL, '2025-01-15 02:11:15.414459+00', 1);
+INSERT INTO public._prisma_migrations VALUES ('6126ff59-b6c3-4fed-9d43-2e463e8dbb5e', 'f49a412b439a8c3b115c54a404a6d4e5e1cdc18482462117d838a330131a2ae8', '2025-01-15 02:11:15.860785+00', '20250113025335_add_atribute_date', NULL, NULL, '2025-01-15 02:11:15.663389+00', 1);
+INSERT INTO public._prisma_migrations VALUES ('f86bd0bf-fdd2-4645-9f7a-b5d415b9e207', '829b15d36aeb726795683c186d0fc2134010eb00250d23024ca4ce04d09971be', '2025-01-15 10:20:27.638668+00', '20250115102027_pub_date', NULL, NULL, '2025-01-15 10:20:27.463279+00', 1);
+INSERT INTO public._prisma_migrations VALUES ('c3c049c0-bd99-4a78-84e1-ceba9601f515', 'ce4ea5afec35922d8d4cfc91bf7ea9bffd883d8a03834179fcea5b62970795cc', NULL, '20250117041605_chaneg_relation_app_version', 'A migration failed to apply. New migrations cannot be applied before the error is recovered from. Read more about how to resolve migration issues in a production database: https://pris.ly/d/migrate-resolve
+
+Migration name: 20250117041605_chaneg_relation_app_version
+
+Database error code: 23502
+
+Database error:
+ERROR: column "fk_version_big_screen" of relation "app_version" contains null values
+
+DbError { severity: "ERROR", parsed_severity: Some(Error), code: SqlState(E23502), message: "column \"fk_version_big_screen\" of relation \"app_version\" contains null values", detail: None, hint: None, position: None, where_: None, schema: Some("public"), table: Some("app_version"), column: Some("fk_version_big_screen"), datatype: None, constraint: None, file: Some("tablecmds.c"), line: Some(6111), routine: Some("ATRewriteTable") }
+
+   0: sql_schema_connector::apply_migration::apply_script
+           with migration_name="20250117041605_chaneg_relation_app_version"
+             at schema-engine\connectors\sql-schema-connector\src\apply_migration.rs:106
+   1: schema_core::commands::apply_migrations::Applying migration
+           with migration_name="20250117041605_chaneg_relation_app_version"
+             at schema-engine\core\src\commands\apply_migrations.rs:91
+   2: schema_core::state::ApplyMigrations
+             at schema-engine\core\src\state.rs:226', NULL, '2025-01-17 04:21:05.391299+00', 0);
+
+
+--
+-- Data for Name: admin; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: agreement; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: app_version; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+INSERT INTO public.app_version VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit, sapien in sollicitudin tincidunt, massa nisl congue neque, pretium aliquet ligula neque eget magna. Maecenas felis felis, volutpat id orci in, fermentum consectetur purus. Donec congue tempus sem, at faucibus velit varius eget. Vivamus eu vehicula tortor. Morbi aliquam scelerisque urna at facilisis. Nunc non massa scelerisque, viverra justo et, malesuada metus. Ut vehicula pharetra eleifend. Suspendisse laoreet tellus vel tellus pharetra cursus. Ut scelerisque, dui quis dignissim efficitur, diam velit ornare turpis, sit amet tincidunt nisi felis iaculis diam. Nam fringilla libero massa, a gravida odio accumsan in.', '2025-01-16 06:57:14.601+00', '2025-01-16 06:57:14.601+00', NULL, 'dfdbf423-303d-4986-b642-1aaf00c275e7', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.2', 'active', '2025-01-18 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-15 10:23:30.945+00', '2025-01-15 10:23:30.945+00', NULL, '79487e25-fa63-417b-b41d-b8a0c6396e5e', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-15 02:14:50.302+00', '2025-01-15 02:14:50.302+00', NULL, '4e93fad4-6c9d-491b-8f11-1c7432db29de', 'tes', '1.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-15 02:19:50.003+00', '2025-01-15 02:19:50.003+00', NULL, '581fb8f1-c310-4345-89be-463a4a3af88b', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim tellus, rutrum eget velit eu, vestibulum bibendum risus. Sed viverra diam quam, at imperdiet neque rhoncus non. Fusce eu leo at ante rhoncus elementum quis id nisi. Duis iaculis ipsum arcu, ac tincidunt lorem ultricies id. Etiam fringilla nunc sit amet dui varius rhoncus. Aliquam quam purus, porttitor quis cursus sit amet, convallis ut dolor. In eu velit porta, iaculis justo sit amet, feugiat orci. Sed volutpat, velit at eleifend luctus, erat tellus egestas elit, et porta dolor nibh vitae enim. Nullam ultrices imperdiet tellus, ut varius orci tincidunt id. Nulla facilisi. Aenean sit amet vehicula est. Nullam maximus dolor non auctor porta. Cras at scelerisque ex, a malesuada odio. Donec sit amet lorem turpis. Sed enim est, pellentesque sed est ut, efficitur aliquet tortor. Nunc ut enim vitae arcu tempus commodo vel a orci.', '2025-01-16 02:20:11.432+00', '2025-01-16 02:20:11.432+00', NULL, '2c84e945-e5e8-4316-8413-96f69d5c6340', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim tellus, rutrum eget velit eu, vestibulum bibendum risus.', '3.1.1', 'active', '2025-01-16 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 02:24:17.583+00', '2025-01-16 02:24:17.583+00', NULL, '12497cc5-a9f7-413d-991b-a268b817a4c5', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim tellus, rutrum eget velit eu, vestibulum bibendum risus. Sed viverra diam quam, at imperdiet neque rhoncus non. Fusce eu leo at ante rhoncus elementum quis id nisi. Duis iaculis ipsum arcu, ac tincidunt lorem ultricies id. Etiam fringilla nunc sit amet dui varius rhoncus. Aliquam quam purus, porttitor quis cursus sit amet, convallis ut dolor. In eu velit porta, iaculis justo sit amet, feugiat orci. Sed volutpat, velit at eleifend luctus, erat tellus egestas elit, et porta dolor nibh vitae enim. Nullam ultrices imperdiet tellus, ut varius orci tincidunt id. Nulla facilisi. Aenean sit amet vehicula est. Nullam maximus dolor non auctor porta. Cras at scelerisque ex, a malesuada odio. Donec sit amet lorem turpis. Sed enim est, pellentesque sed est ut, efficitur aliquet tortor. Nunc ut enim vitae arcu tempus commodo vel a orci.', '2025-01-16 02:24:37.464+00', '2025-01-16 02:24:37.464+00', NULL, '9a60526d-656c-44c5-8d5b-d9f54f199932', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim tellus, rutrum eget velit eu, vestibulum bibendum risus. ', '3.1.1', 'active', '2025-01-17 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 02:25:28.515+00', '2025-01-16 02:25:28.515+00', NULL, '9bf44201-71f2-461e-b4b6-0ba9d165f82b', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 02:29:46.691+00', '2025-01-16 02:29:46.691+00', NULL, 'cbc5c851-9cb3-4260-84b7-2cec5372c945', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 02:30:29.74+00', '2025-01-16 02:30:29.74+00', NULL, 'a97730f3-ebfe-4c83-8b1d-c2207db1410e', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 02:30:40.587+00', '2025-01-16 02:30:40.587+00', NULL, '5669c366-ad1b-454d-bbfa-b1c0afb033ba', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 02:36:38.625+00', '2025-01-16 02:36:38.625+00', NULL, '56ad2743-ab16-40e0-a2f8-d94ee6728b79', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 02:36:55.372+00', '2025-01-16 02:36:55.372+00', NULL, 'a9ad4949-c443-45c6-b8d5-9358faa38e30', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 02:42:36.537+00', '2025-01-16 02:42:36.537+00', NULL, '145e91de-943d-4c7d-a4ed-7b8072b77fc4', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 03:46:58.631+00', '2025-01-16 03:46:58.631+00', NULL, '9d94ca8b-226c-4f47-845a-7b7466eb05d2', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 03:47:18.646+00', '2025-01-16 03:47:18.646+00', NULL, '4485c0f5-88c2-4fe9-b508-76263430e6ef', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 03:48:58.56+00', '2025-01-16 03:48:58.56+00', NULL, '72a45874-857b-4153-b6f7-30ce0348be3b', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim tellus, rutrum eget velit eu, vestibulum bibendum risus. Sed viverra diam quam, at imperdiet neque rhoncus non. Fusce eu leo at ante rhoncus elementum quis id nisi. Duis iaculis ipsum arcu, ac tincidunt lorem ultricies id. Etiam fringilla nunc sit amet dui varius rhoncus. Aliquam quam purus, porttitor quis cursus sit amet, convallis ut dolor. In eu velit porta, iaculis justo sit amet, feugiat orci. Sed volutpat, velit at eleifend luctus, erat tellus egestas elit, et porta dolor nibh vitae enim. Nullam ultrices imperdiet tellus, ut varius orci tincidunt id. Nulla facilisi. Aenean sit amet vehicula est. Nullam maximus dolor non auctor porta. Cras at scelerisque ex, a malesuada odio. Donec sit amet lorem turpis. Sed enim est, pellentesque sed est ut, efficitur aliquet tortor. Nunc ut enim vitae arcu tempus commodo vel a orci.', '2025-01-16 03:50:57.942+00', '2025-01-16 03:50:57.942+00', NULL, '260451d9-ea37-40be-bcda-8112866320fa', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim tellus, rutrum eget velit eu, vestibulum bibendum risus. Sed viverra diam quam, at imperdiet neque rhoncus non. Fusce eu leo at ante rhoncus elementum quis id nisi. Duis iaculis ipsum arcu, ac tincidunt lorem ultricies id.', '3.1.1', 'active', '2025-01-16 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 06:03:30.952+00', '2025-01-16 06:03:30.952+00', NULL, '8d0987ae-b530-4893-831d-53d47969fac4', 'ok ok ok', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '2025-01-16 06:05:31.661+00', '2025-01-16 06:05:31.661+00', NULL, '94f1dc74-4306-4664-9119-aafa19ef32fb', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1', 'active', '2025-01-18 00:00:00');
+INSERT INTO public.app_version VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '2025-01-16 06:08:06.453+00', '2025-01-16 06:08:06.453+00', NULL, '206e0c0c-95d4-463d-b0e6-76ccdf026dd1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1', 'active', '2025-01-18 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 06:15:01.326+00', '2025-01-16 06:15:01.326+00', NULL, '900f3962-1c76-44a1-8961-97655f3e42c0', 'test file name', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '2025-01-16 06:56:34.073+00', '2025-01-16 06:56:34.073+00', NULL, 'a1f52135-33ca-4897-af29-711f46ac5bda', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit, sapien in sollicitudin tincidunt, massa nisl congue neque, pretium aliquet ligula neque eget magna. Maecenas felis felis, volutpat id orci in, fermentum consectetur purus. Donec congue tempus sem, at faucibus velit varius eget. Vivamus eu vehicula tortor. Morbi aliquam scelerisque urna at facilisis. Nunc non massa scelerisque, viverra justo et, malesuada metus. Ut vehicula pharetra eleifend. Suspendisse laoreet tellus vel tellus pharetra cursus. Ut scelerisque, dui quis dignissim efficitur, diam velit ornare turpis, sit amet tincidunt nisi felis iaculis diam. Nam fringilla libero massa, a gravida odio accumsan in.', '3.1.1', 'active', '2025-01-17 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 09:24:18.009+00', '2025-01-16 09:24:18.009+00', NULL, '5acd3c90-17e9-41da-b0bb-3a2769fc0c9a', 'test file name', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 09:25:39.92+00', '2025-01-16 09:25:39.92+00', NULL, 'c7ab3527-ecad-4c4a-a1ae-c6173180af56', 'test file name', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-16 09:53:10.504+00', '2025-01-16 09:53:10.504+00', NULL, '24a673ff-df17-4c78-80f3-0cfe9e9e1827', 'test file name', '2.2.0', 'active', '2024-01-15 00:00:00');
+INSERT INTO public.app_version VALUES ('ini misalnya versi pertama ya ges.. ', '2025-01-17 01:05:50.444+00', '2025-01-17 01:05:50.444+00', NULL, 'ba8e2aae-c1ae-4f59-aafd-780f05b1bbc6', 'test file name', '2.2.0', 'active', '2024-01-15 00:00:00');
+
+
+--
+-- Data for Name: colours; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: customer; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+INSERT INTO public.customer VALUES ('8b4effbe-6d08-4063-af25-8d6186ec52da', 'Qatar', 'Test customer', '123456789101111', '2025-01-15 02:15:21.249+00', NULL, '2025-01-15 02:15:21.249+00');
+INSERT INTO public.customer VALUES ('8f5ea071-325f-4875-b5c1-dfe805c5bf84', 'Qatar', 'Test customer', '123456789101111', '2025-01-15 02:27:56.586+00', NULL, '2025-01-15 02:27:56.586+00');
+
+
+--
+-- Data for Name: detail_experience; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: experiences; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: experiences_properties; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: firmware_version; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+INSERT INTO public.firmware_version VALUES ('c5a3b658-5a85-4a10-9e86-70383658fe37', 'BARU001', 'Light v1.0', 'Chair v2.0', 'Olvactory v1.5', 'Manual v3.0', 'AC v4.1', 'Volume v2.2', 'Door v1.1', 'active', '2025-01-15 02:15:20.909+00', NULL, '2025-01-15 02:15:20.909+00');
+INSERT INTO public.firmware_version VALUES ('c1b3e6f9-5eb5-49a7-bfed-c7b1032800dc', 'BARU001', 'Light v2.0', 'Chair v2.0', 'Olvactory v2.5', 'Manual v3.0', 'AC v4.1', 'Volume v2.2', 'Door v1.1', 'active', '2025-01-15 02:27:55.944+00', NULL, '2025-01-15 02:27:55.944+00');
+INSERT INTO public.firmware_version VALUES ('3ff170d4-3d33-47ee-8067-b0363cfd4836', 'FIRMWARE002', 'Light v1.1', 'Chair v2.1', 'Olvactory v1.5', 'Manual v3.0', 'AC v4.1', 'Volume v2.2', 'Door v1.1', 'active', '2025-01-16 02:55:06.158+00', NULL, '2025-01-16 02:55:06.158+00');
+INSERT INTO public.firmware_version VALUES ('fce30537-a551-4b26-8511-6acc5891adc0', 'FIRMWARE003', 'Light v1.3', 'Chair v2.3', 'Olvactory v1.5', 'Manual v3.0', 'AC v4.1', 'Volume v2.2', 'Door v1.1', 'active', '2025-01-16 02:55:18.477+00', NULL, '2025-01-16 02:55:18.477+00');
+
+
+--
+-- Data for Name: group; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+INSERT INTO public."group" VALUES ('65e1342a-c0ca-4f62-9c94-0761a5b57a57', '2025-01-16 01:49:13.06+00', NULL, '2025-01-16 01:49:13.06+00', 'Group A');
+INSERT INTO public."group" VALUES ('5c1a2167-2ac4-439e-868d-10c0f9ef8506', '2025-01-16 01:49:17.728+00', NULL, '2025-01-16 01:49:17.728+00', 'Group B');
+INSERT INTO public."group" VALUES ('6985848b-3530-4ace-9848-b27a8c417e8a', '2025-01-16 01:49:23.555+00', NULL, '2025-01-16 01:49:23.555+00', 'Group C');
+INSERT INTO public."group" VALUES ('5bd720f9-d3cc-4ede-97d8-891a02487ba2', '2025-01-16 01:49:36.203+00', NULL, '2025-01-16 01:49:36.203+00', 'Group D');
+INSERT INTO public."group" VALUES ('324bb24b-5268-453a-b684-08aa1c56deb9', '2025-01-15 02:14:22.89+00', NULL, '2025-01-15 02:14:22.89+00', 'Group E');
+
+
+--
+-- Data for Name: issues; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: mode; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: pod; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+INSERT INTO public.pod VALUES ('a564a04b-e854-4f4e-b2ad-9fe7b8466643', 'POD00666', 'Pod Device A', 'http://example.com', 'Pod Identification A', '192.168.1.1', '2025-01-15 03:13:03.519+00', '2025-01-15 03:13:03.519+00', NULL, '2c84e945-e5e8-4316-8413-96f69d5c6340', '12.345678', '98.765432', 'Amplifier A', '8f5ea071-325f-4875-b5c1-dfe805c5bf84', '00:11:22:33:44:55', '1.0.0', 'SN123456789', '1.0.0', 'SoundCard A', '2025-01-10 12:00:00', '324bb24b-5268-453a-b684-08aa1c56deb9', 'c1b3e6f9-5eb5-49a7-bfed-c7b1032800dc');
+INSERT INTO public.pod VALUES ('646b2298-e3f5-4745-8c34-078f1864cde6', 'POD0022', 'Pod Device AB', 'http://example.com', 'Pod Identification A', '192.168.1.1', '2025-01-15 02:15:21.455+00', '2025-01-15 02:15:21.455+00', NULL, '94f1dc74-4306-4664-9119-aafa19ef32fb', '12.345678', '98.765432', 'Amplifier A', '8b4effbe-6d08-4063-af25-8d6186ec52da', '00:11:22:33:44:55', '1.0.0', 'SN123456789', '1.0.0', 'SoundCard A', '2025-01-10 12:00:00', '324bb24b-5268-453a-b684-08aa1c56deb9', '3ff170d4-3d33-47ee-8067-b0363cfd4836');
+INSERT INTO public.pod VALUES ('484c6c0c-9348-4209-b888-bc00dbe5ef6f', 'POD00561', 'Pod Device A', 'http://example.com', 'Pod Identification A', '192.168.1.1', '2025-01-15 02:27:56.793+00', '2025-01-15 02:27:56.793+00', NULL, '79487e25-fa63-417b-b41d-b8a0c6396e5e', '12.345678', '98.765432', 'Amplifier A', '8f5ea071-325f-4875-b5c1-dfe805c5bf84', '00:11:22:33:44:55', '1.0.0', 'SN123456789', '1.0.0', 'SoundCard A', '2025-01-10 12:00:00', '5bd720f9-d3cc-4ede-97d8-891a02487ba2', 'c1b3e6f9-5eb5-49a7-bfed-c7b1032800dc');
+
+
+--
+-- Data for Name: podAdmin; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: pod_history; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: pod_topics; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: terms_and_conditions; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: terms_and_conditions_accepted; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: terms_and_conditions_answers; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: terms_and_conditions_questions; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+
+
+--
+-- Data for Name: version_big_screen; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+INSERT INTO public.version_big_screen VALUES ('d0607d6f-e200-436e-83f5-eed1bfd01ca4', '1736907290294-691858983.jpg', '2025-01-15 02:14:50.302+00', '2025-01-15 02:14:50.302+00', NULL, 'signature_big_screen', '1.0.0', NULL, '4e93fad4-6c9d-491b-8f11-1c7432db29de');
+INSERT INTO public.version_big_screen VALUES ('4aef3370-9c78-4fff-8787-e94fb67e21b7', '1736907590000-531140560.jpg', '2025-01-15 02:19:50.003+00', '2025-01-15 02:19:50.003+00', NULL, 'signature_big_screen', '2.0.0', NULL, '581fb8f1-c310-4345-89be-463a4a3af88b');
+INSERT INTO public.version_big_screen VALUES ('e21c0387-1a15-4ef4-ae39-e4e3870f86c6', '1736936610941-892557772.jpg', '2025-01-15 10:23:30.945+00', '2025-01-15 10:23:30.945+00', NULL, 'signature_big_screen', '2.0.0', NULL, '79487e25-fa63-417b-b41d-b8a0c6396e5e');
+INSERT INTO public.version_big_screen VALUES ('beb2a526-bbef-4401-9a66-e5234ed4ece3', '1736994011427-785866353.txt', '2025-01-16 02:20:11.432+00', '2025-01-16 02:20:11.432+00', NULL, 'Nullam maximus dolor non auctor porta. Cras at scelerisque ex, ', '3.1.1.txt', NULL, '2c84e945-e5e8-4316-8413-96f69d5c6340');
+INSERT INTO public.version_big_screen VALUES ('cf2d3c26-48e7-493d-9020-58c14ade0508', 'leaf spot19 (1).jpg', '2025-01-16 02:24:17.583+00', '2025-01-16 02:24:17.583+00', NULL, 'signature_big_screen', '2.0.0', NULL, '12497cc5-a9f7-413d-991b-a268b817a4c5');
+INSERT INTO public.version_big_screen VALUES ('0e56094c-8f46-4575-8781-0d40f9c05fd4', '1736994277461-360292572.txt', '2025-01-16 02:24:37.464+00', '2025-01-16 02:24:37.464+00', NULL, 'Nullam maximus dolor non auctor porta. Cras at scelerisque ex, ', '3.1.1', NULL, '9a60526d-656c-44c5-8d5b-d9f54f199932');
+INSERT INTO public.version_big_screen VALUES ('42fd668a-a10d-44bb-9781-99eba19be02c', 'leaf spot19 (1).jpg', '2025-01-16 02:25:28.515+00', '2025-01-16 02:25:28.515+00', NULL, 'signature_big_screen', '2.0.0', NULL, '9bf44201-71f2-461e-b4b6-0ba9d165f82b');
+INSERT INTO public.version_big_screen VALUES ('6c8a63ed-2e7c-4af0-9c4d-096d1fef8358', 'leaf spot19 (1).jpg', '2025-01-16 02:29:46.691+00', '2025-01-16 02:29:46.691+00', NULL, 'signature_big_screen', '2.0.0', NULL, 'cbc5c851-9cb3-4260-84b7-2cec5372c945');
+INSERT INTO public.version_big_screen VALUES ('bb2975ea-8ce5-46a1-a47d-e78aa26209f7', 'leaf spot19 (1).jpg', '2025-01-16 02:30:29.74+00', '2025-01-16 02:30:29.74+00', NULL, 'signature_big_screen', '2.0.0', NULL, 'a97730f3-ebfe-4c83-8b1d-c2207db1410e');
+INSERT INTO public.version_big_screen VALUES ('50022aa6-30d0-4b59-987b-22cee9c66474', 'leaf spot19 (1).jpg', '2025-01-16 02:30:40.587+00', '2025-01-16 02:30:40.587+00', NULL, 'signature_big_screen', '2.0.0', NULL, '5669c366-ad1b-454d-bbfa-b1c0afb033ba');
+INSERT INTO public.version_big_screen VALUES ('f0e467c6-d0cc-4702-8102-b0c3468a4ac7', 'leaf spot19 (1).jpg', '2025-01-16 02:36:38.625+00', '2025-01-16 02:36:38.625+00', NULL, 'signature_big_screen', '2.0.0', NULL, '56ad2743-ab16-40e0-a2f8-d94ee6728b79');
+INSERT INTO public.version_big_screen VALUES ('bb9845f3-c493-4d91-b400-16f93f4972f0', 'leaf spot19 (1).jpg', '2025-01-16 02:36:55.372+00', '2025-01-16 02:36:55.372+00', NULL, 'signature_big_screen', '2.0.0', NULL, 'a9ad4949-c443-45c6-b8d5-9358faa38e30');
+INSERT INTO public.version_big_screen VALUES ('38d2137d-150f-4ae1-abd5-668345153036', 'leaf spot19 (1).jpg', '2025-01-16 02:42:36.537+00', '2025-01-16 02:42:36.537+00', NULL, 'signature_big_screen', '2.0.0', NULL, '145e91de-943d-4c7d-a4ed-7b8072b77fc4');
+INSERT INTO public.version_big_screen VALUES ('6e279fa3-e872-40cd-8ce4-33daacb8ce54', 'leaf spot19 (1).jpg', '2025-01-16 03:46:58.631+00', '2025-01-16 03:46:58.631+00', NULL, 'signature_big_screen', '2.0.0', NULL, '9d94ca8b-226c-4f47-845a-7b7466eb05d2');
+INSERT INTO public.version_big_screen VALUES ('ac2b9447-a7ba-4668-8d9f-9dd02f4ea57f', 'leaf spot19 (1).jpg', '2025-01-16 03:47:18.646+00', '2025-01-16 03:47:18.646+00', NULL, 'signature_big_screen', '2.0.0', NULL, '4485c0f5-88c2-4fe9-b508-76263430e6ef');
+INSERT INTO public.version_big_screen VALUES ('87ec4dda-016a-40cf-a116-2ca633e41f50', 'leaf spot19 (1).jpg', '2025-01-16 03:48:58.56+00', '2025-01-16 03:48:58.56+00', NULL, 'signature_big_screen', '2.0.0', NULL, '72a45874-857b-4153-b6f7-30ce0348be3b');
+INSERT INTO public.version_big_screen VALUES ('065de58d-a105-47e0-b963-683fb30445b0', '3.1.1.txt', '2025-01-16 03:50:57.942+00', '2025-01-16 03:50:57.942+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1', NULL, '260451d9-ea37-40be-bcda-8112866320fa');
+INSERT INTO public.version_big_screen VALUES ('84e02d0d-72b2-4581-aa9b-5b0d781cebd1', 'leaf spot19 (1).jpg', '2025-01-16 06:03:30.952+00', '2025-01-16 06:03:30.952+00', NULL, 'signature_big_screen', '2.0.0', NULL, '8d0987ae-b530-4893-831d-53d47969fac4');
+INSERT INTO public.version_big_screen VALUES ('ff3c3803-a13f-4f37-88a2-a0ae120f05a4', '1-13-2025.txt', '2025-01-16 06:05:31.661+00', '2025-01-16 06:05:31.661+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '1-13-2025', NULL, '94f1dc74-4306-4664-9119-aafa19ef32fb');
+INSERT INTO public.version_big_screen VALUES ('74ddce2b-48a8-4f07-a289-7075883909f1', '1-13-2025.txt', '2025-01-16 06:08:06.453+00', '2025-01-16 06:08:06.453+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '1-13-2025', NULL, '206e0c0c-95d4-463d-b0e6-76ccdf026dd1');
+INSERT INTO public.version_big_screen VALUES ('24b87fa4-aaa2-49cc-9535-b3a773f7b3f1', 'leaf spot19 (1).jpg', '2025-01-16 06:15:01.326+00', '2025-01-16 06:15:01.326+00', NULL, 'signature_big_screen', '2.0.0', NULL, '900f3962-1c76-44a1-8961-97655f3e42c0');
+INSERT INTO public.version_big_screen VALUES ('695183af-5ac0-4533-8448-979e04dfadb4', '3.1.1.txt', '2025-01-16 06:56:34.073+00', '2025-01-16 06:56:34.073+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1', NULL, 'a1f52135-33ca-4897-af29-711f46ac5bda');
+INSERT INTO public.version_big_screen VALUES ('969027e3-4b44-407f-b6b2-6e09dc45e415', '3.1.1.txt', '2025-01-16 06:57:14.601+00', '2025-01-16 06:57:14.601+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1', NULL, 'dfdbf423-303d-4986-b642-1aaf00c275e7');
+
+
+--
+-- Data for Name: version_mobile_api; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+INSERT INTO public.version_mobile_api VALUES ('f97d6609-fbe5-430d-8d08-af3b25792819', '1736907290295-616014572.jpg', '2025-01-15 02:14:50.302+00', '2025-01-15 02:14:50.302+00', NULL, 'signature_mobile_api', '1.0.0', '2025-01-15 02:14:50.302', '4e93fad4-6c9d-491b-8f11-1c7432db29de');
+INSERT INTO public.version_mobile_api VALUES ('97fdbf75-4d25-4f2b-890e-d69854d45670', '1736907590000-207812071.jpg', '2025-01-15 02:19:50.003+00', '2025-01-15 02:19:50.003+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-15 02:19:50.003', '581fb8f1-c310-4345-89be-463a4a3af88b');
+INSERT INTO public.version_mobile_api VALUES ('a3689b4d-a9d8-4192-8471-d74a04d630c6', '1736936610941-748148943.jpg', '2025-01-15 10:23:30.945+00', '2025-01-15 10:23:30.945+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-15 10:23:30.945', '79487e25-fa63-417b-b41d-b8a0c6396e5e');
+INSERT INTO public.version_mobile_api VALUES ('0b17023f-4f28-46a6-959f-83d0f087a102', '1736994011428-671902621.txt', '2025-01-16 02:20:11.432+00', '2025-01-16 02:20:11.432+00', NULL, 'Fusce eu leo at ante rhoncus elementum quis id nisi. Duis iaculis ipsum arcu, ', '3.1.1.txt', '2025-01-16 02:20:11.432', '2c84e945-e5e8-4316-8413-96f69d5c6340');
+INSERT INTO public.version_mobile_api VALUES ('1df743cf-ccb5-4190-ab39-95058f1b387d', 'leaf spot19 (1).jpg', '2025-01-16 02:24:17.583+00', '2025-01-16 02:24:17.583+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 02:24:17.583', '12497cc5-a9f7-413d-991b-a268b817a4c5');
+INSERT INTO public.version_mobile_api VALUES ('5b6dc361-8850-4533-aadb-0f31eee2b749', '1736994277462-363603546.txt', '2025-01-16 02:24:37.464+00', '2025-01-16 02:24:37.464+00', NULL, 'Nullam maximus dolor non auctor porta. Cras at scelerisque ex, ', '3.1.1', '2025-01-16 02:24:37.464', '9a60526d-656c-44c5-8d5b-d9f54f199932');
+INSERT INTO public.version_mobile_api VALUES ('578be2f7-e8e5-498b-8b25-bd422cd8c092', 'leaf spot19 (1).jpg', '2025-01-16 02:25:28.515+00', '2025-01-16 02:25:28.515+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 02:25:28.515', '9bf44201-71f2-461e-b4b6-0ba9d165f82b');
+INSERT INTO public.version_mobile_api VALUES ('cf864d1c-908e-4e8f-9f3d-b60d92b8ccdd', 'leaf spot19 (1).jpg', '2025-01-16 02:29:46.691+00', '2025-01-16 02:29:46.691+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 02:29:46.691', 'cbc5c851-9cb3-4260-84b7-2cec5372c945');
+INSERT INTO public.version_mobile_api VALUES ('37916c0f-fbe0-4b7b-a621-7f1fd804cd67', 'f66af6c0-6fc6-4020-b1de-a73685d497c2___RS_HL 4181.JPG', '2025-01-16 02:30:29.74+00', '2025-01-16 02:30:29.74+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 02:30:29.74', 'a97730f3-ebfe-4c83-8b1d-c2207db1410e');
+INSERT INTO public.version_mobile_api VALUES ('5a867f1e-472a-4d80-9c0a-9a4c0f691307', 'f66af6c0-6fc6-4020-b1de-a73685d497c2___RS_HL 4181.JPG', '2025-01-16 02:30:40.587+00', '2025-01-16 02:30:40.587+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 02:30:40.587', '5669c366-ad1b-454d-bbfa-b1c0afb033ba');
+INSERT INTO public.version_mobile_api VALUES ('2b33fd7c-abc3-423a-8d7e-69c50ef5b6f7', 'f66af6c0-6fc6-4020-b1de-a73685d497c2___RS_HL 4181.JPG', '2025-01-16 02:36:38.625+00', '2025-01-16 02:36:38.625+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 02:36:38.625', '56ad2743-ab16-40e0-a2f8-d94ee6728b79');
+INSERT INTO public.version_mobile_api VALUES ('ca5007d7-1dcb-4e9e-b465-90ab88156035', 'f66af6c0-6fc6-4020-b1de-a73685d497c2___RS_HL 4181.JPG', '2025-01-16 02:36:55.372+00', '2025-01-16 02:36:55.372+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 02:36:55.372', 'a9ad4949-c443-45c6-b8d5-9358faa38e30');
+INSERT INTO public.version_mobile_api VALUES ('2e8e7ded-c397-44a7-aaf1-d8d335ad2e9c', 'f66af6c0-6fc6-4020-b1de-a73685d497c2___RS_HL 4181.JPG', '2025-01-16 02:42:36.537+00', '2025-01-16 02:42:36.537+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 02:42:36.537', '145e91de-943d-4c7d-a4ed-7b8072b77fc4');
+INSERT INTO public.version_mobile_api VALUES ('9d0b938d-9fc7-4f26-89d1-7cb094deb651', 'f66af6c0-6fc6-4020-b1de-a73685d497c2___RS_HL 4181.JPG', '2025-01-16 03:46:58.631+00', '2025-01-16 03:46:58.631+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 03:46:58.631', '9d94ca8b-226c-4f47-845a-7b7466eb05d2');
+INSERT INTO public.version_mobile_api VALUES ('079adb9d-95f6-4cce-ae22-659601e5d4b9', 'f66af6c0-6fc6-4020-b1de-a73685d497c2___RS_HL 4181.JPG', '2025-01-16 03:47:18.646+00', '2025-01-16 03:47:18.646+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 03:47:18.646', '4485c0f5-88c2-4fe9-b508-76263430e6ef');
+INSERT INTO public.version_mobile_api VALUES ('1482b656-3afa-4ef0-9d98-8ee7224cfc80', 'f66af6c0-6fc6-4020-b1de-a73685d497c2___RS_HL 4181.JPG', '2025-01-16 03:48:58.56+00', '2025-01-16 03:48:58.56+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 03:48:58.56', '72a45874-857b-4153-b6f7-30ce0348be3b');
+INSERT INTO public.version_mobile_api VALUES ('be2d329a-1e0e-4d05-887b-27eb10834446', '3.1.1.txt', '2025-01-16 03:50:57.942+00', '2025-01-16 03:50:57.942+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1', '2025-01-16 03:50:57.942', '260451d9-ea37-40be-bcda-8112866320fa');
+INSERT INTO public.version_mobile_api VALUES ('094b065c-fc2b-4e5a-90d5-2ef33e259522', 'f66af6c0-6fc6-4020-b1de-a73685d497c2___RS_HL 4181.JPG', '2025-01-16 06:03:30.952+00', '2025-01-16 06:03:30.952+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 06:03:30.952', '8d0987ae-b530-4893-831d-53d47969fac4');
+INSERT INTO public.version_mobile_api VALUES ('0baa27ca-8de1-449c-bc3e-c7dc84600d26', '1-13-2025.txt', '2025-01-16 06:05:31.661+00', '2025-01-16 06:05:31.661+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '1-13-2025', '2025-01-16 06:05:31.661', '94f1dc74-4306-4664-9119-aafa19ef32fb');
+INSERT INTO public.version_mobile_api VALUES ('be548df0-372f-4883-8440-b319ee9d0c24', '1-13-2025.txt', '2025-01-16 06:08:06.453+00', '2025-01-16 06:08:06.453+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '1-13-2025', '2025-01-16 06:08:06.453', '206e0c0c-95d4-463d-b0e6-76ccdf026dd1');
+INSERT INTO public.version_mobile_api VALUES ('97d1130c-6fa5-4891-9fdc-edcc57750b06', 'f66af6c0-6fc6-4020-b1de-a73685d497c2___RS_HL 4181.JPG', '2025-01-16 06:15:01.326+00', '2025-01-16 06:15:01.326+00', NULL, 'signature_mobile_api', '2.0.0', '2025-01-16 06:15:01.326', '900f3962-1c76-44a1-8961-97655f3e42c0');
+INSERT INTO public.version_mobile_api VALUES ('b55b42a9-8b94-411b-97db-9b2ef2d83d13', '3.1.1.txt', '2025-01-16 06:56:34.073+00', '2025-01-16 06:56:34.073+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1', '2025-01-16 06:56:34.073', 'a1f52135-33ca-4897-af29-711f46ac5bda');
+INSERT INTO public.version_mobile_api VALUES ('319d730e-583b-4476-ba87-37ff53e1ae58', '3.1.1.txt', '2025-01-16 06:57:14.601+00', '2025-01-16 06:57:14.601+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1', '2025-01-16 06:57:14.601', 'dfdbf423-303d-4986-b642-1aaf00c275e7');
+
+
+--
+-- Data for Name: version_small_screen; Type: TABLE DATA; Schema: public; Owner: recharge
+--
+
+INSERT INTO public.version_small_screen VALUES ('8d46b449-9ef8-4b12-bd9c-9b7a9fd20e9f', '1736907290295-910052983.jpg', '2025-01-15 02:14:50.302+00', '2025-01-15 02:14:50.302+00', NULL, 'signature_small_screen', '1.0.0', '2025-01-15 02:14:50.302', '4e93fad4-6c9d-491b-8f11-1c7432db29de');
+INSERT INTO public.version_small_screen VALUES ('e2bd8611-36d1-466d-812e-729e2bc4e130', '1736907590000-697587092.jpg', '2025-01-15 02:19:50.003+00', '2025-01-15 02:19:50.003+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-15 02:19:50.003', '581fb8f1-c310-4345-89be-463a4a3af88b');
+INSERT INTO public.version_small_screen VALUES ('dfca19a3-424e-4ea4-8e03-b4b9ced6aa43', '1736936610941-430929508.jpg', '2025-01-15 10:23:30.945+00', '2025-01-15 10:23:30.945+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-15 10:23:30.945', '79487e25-fa63-417b-b41d-b8a0c6396e5e');
+INSERT INTO public.version_small_screen VALUES ('8d75c086-4b61-4341-a116-82c7d706cbd4', '1736994011428-835943686.txt', '2025-01-16 02:20:11.432+00', '2025-01-16 02:20:11.432+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1.txt', '2025-01-16 02:20:11.432', '2c84e945-e5e8-4316-8413-96f69d5c6340');
+INSERT INTO public.version_small_screen VALUES ('ed4ee697-95f0-43ad-8b64-e78db38b2668', 'leaf spot19 (1).jpg', '2025-01-16 02:24:17.583+00', '2025-01-16 02:24:17.583+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 02:24:17.583', '12497cc5-a9f7-413d-991b-a268b817a4c5');
+INSERT INTO public.version_small_screen VALUES ('b28fc65b-bf21-44e2-9ba4-5e9e901a2244', '1736994277462-615829519.txt', '2025-01-16 02:24:37.464+00', '2025-01-16 02:24:37.464+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1', '2025-01-16 02:24:37.464', '9a60526d-656c-44c5-8d5b-d9f54f199932');
+INSERT INTO public.version_small_screen VALUES ('0e4a112f-d90c-48ec-9b42-9f66cc3e9823', 'leaf spot19 (1).jpg', '2025-01-16 02:25:28.515+00', '2025-01-16 02:25:28.515+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 02:25:28.515', '9bf44201-71f2-461e-b4b6-0ba9d165f82b');
+INSERT INTO public.version_small_screen VALUES ('8fef2bd0-692c-46f9-8741-ea980a6c7b43', 'leaf spot19 (1).jpg', '2025-01-16 02:29:46.691+00', '2025-01-16 02:29:46.691+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 02:29:46.691', 'cbc5c851-9cb3-4260-84b7-2cec5372c945');
+INSERT INTO public.version_small_screen VALUES ('24640c42-b919-439c-ae6c-934b96d03cc9', '2 x 3 Bhar.jpg', '2025-01-16 02:30:29.74+00', '2025-01-16 02:30:29.74+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 02:30:29.74', 'a97730f3-ebfe-4c83-8b1d-c2207db1410e');
+INSERT INTO public.version_small_screen VALUES ('62bf67b5-ff07-43e0-8ade-511f79bef67e', '2 x 3 Bhar.jpg', '2025-01-16 02:30:40.587+00', '2025-01-16 02:30:40.587+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 02:30:40.587', '5669c366-ad1b-454d-bbfa-b1c0afb033ba');
+INSERT INTO public.version_small_screen VALUES ('7ec12ffb-6d91-453f-8469-3fd99b0e0a9e', '2 x 3 Bhar.jpg', '2025-01-16 02:36:38.625+00', '2025-01-16 02:36:38.625+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 02:36:38.625', '56ad2743-ab16-40e0-a2f8-d94ee6728b79');
+INSERT INTO public.version_small_screen VALUES ('57256673-3e2a-44a0-8187-e6980b41ceba', '2 x 3 Bhar.jpg', '2025-01-16 02:36:55.372+00', '2025-01-16 02:36:55.372+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 02:36:55.372', 'a9ad4949-c443-45c6-b8d5-9358faa38e30');
+INSERT INTO public.version_small_screen VALUES ('f8fa7fb2-f8e0-4f25-b4bc-04104d5fdf24', '2 x 3 Bhar.jpg', '2025-01-16 02:42:36.537+00', '2025-01-16 02:42:36.537+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 02:42:36.537', '145e91de-943d-4c7d-a4ed-7b8072b77fc4');
+INSERT INTO public.version_small_screen VALUES ('de69693c-8c9a-4178-af84-d3ff6eb27328', '2 x 3 Bhar.jpg', '2025-01-16 03:46:58.631+00', '2025-01-16 03:46:58.631+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 03:46:58.631', '9d94ca8b-226c-4f47-845a-7b7466eb05d2');
+INSERT INTO public.version_small_screen VALUES ('cac6065a-65c3-4dd2-bf34-47f7cd52fa9a', '2 x 3 Bhar.jpg', '2025-01-16 03:47:18.646+00', '2025-01-16 03:47:18.646+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 03:47:18.646', '4485c0f5-88c2-4fe9-b508-76263430e6ef');
+INSERT INTO public.version_small_screen VALUES ('fb9f6a18-b60a-4ee3-b20a-2d25c1a7fe6d', '2 x 3 Bhar.jpg', '2025-01-16 03:48:58.56+00', '2025-01-16 03:48:58.56+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 03:48:58.56', '72a45874-857b-4153-b6f7-30ce0348be3b');
+INSERT INTO public.version_small_screen VALUES ('b8e22070-4435-4dff-bb72-78a84b7c83fc', '3.1.1.txt', '2025-01-16 03:50:57.942+00', '2025-01-16 03:50:57.942+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1', '2025-01-16 03:50:57.942', '260451d9-ea37-40be-bcda-8112866320fa');
+INSERT INTO public.version_small_screen VALUES ('974334a8-63e1-4087-8866-437d32cbcfc9', '2 x 3 Bhar.jpg', '2025-01-16 06:03:30.952+00', '2025-01-16 06:03:30.952+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 06:03:30.952', '8d0987ae-b530-4893-831d-53d47969fac4');
+INSERT INTO public.version_small_screen VALUES ('795d6bed-785f-4d7d-8b00-52dbbb64c027', '1-13-2025.txt', '2025-01-16 06:05:31.661+00', '2025-01-16 06:05:31.661+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '1-13-2025', '2025-01-16 06:05:31.661', '94f1dc74-4306-4664-9119-aafa19ef32fb');
+INSERT INTO public.version_small_screen VALUES ('5fb1f133-6abb-4237-99d9-b5a814b6f407', '1-13-2025.txt', '2025-01-16 06:08:06.453+00', '2025-01-16 06:08:06.453+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '1-13-2025', '2025-01-16 06:08:06.453', '206e0c0c-95d4-463d-b0e6-76ccdf026dd1');
+INSERT INTO public.version_small_screen VALUES ('26c655f0-22e8-4d20-8309-46c426f62c69', '2 x 3 Bhar.jpg', '2025-01-16 06:15:01.326+00', '2025-01-16 06:15:01.326+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 06:15:01.326', '900f3962-1c76-44a1-8961-97655f3e42c0');
+INSERT INTO public.version_small_screen VALUES ('61fef0a8-ca18-40d3-b4da-b0ea94083ea0', '3.1.1.txt', '2025-01-16 06:56:34.073+00', '2025-01-16 06:56:34.073+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1', '2025-01-16 06:56:34.073', 'a1f52135-33ca-4897-af29-711f46ac5bda');
+INSERT INTO public.version_small_screen VALUES ('64ee2d5b-2ee3-462c-9d94-cb67e3194f6c', '3.1.1.txt', '2025-01-16 06:57:14.601+00', '2025-01-16 06:57:14.601+00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '3.1.1', '2025-01-16 06:57:14.601', 'dfdbf423-303d-4986-b642-1aaf00c275e7');
+INSERT INTO public.version_small_screen VALUES ('ce7556ee-4930-4fbf-8275-aad9d916b962', '2 x 3 Bhar.jpg', '2025-01-16 09:24:18.009+00', '2025-01-16 09:24:18.009+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 09:24:18.009', '5acd3c90-17e9-41da-b0bb-3a2769fc0c9a');
+INSERT INTO public.version_small_screen VALUES ('ea2495a5-eec9-4129-87d5-a69612436051', '2 x 3 Bhar.jpg', '2025-01-16 09:25:39.92+00', '2025-01-16 09:25:39.92+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 09:25:39.92', 'c7ab3527-ecad-4c4a-a1ae-c6173180af56');
+INSERT INTO public.version_small_screen VALUES ('254b192a-0756-4a7f-a6b4-e8b5eed5c9c6', '2 x 3 Bhar.jpg', '2025-01-16 09:53:10.504+00', '2025-01-16 09:53:10.504+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-16 09:53:10.504', '24a673ff-df17-4c78-80f3-0cfe9e9e1827');
+INSERT INTO public.version_small_screen VALUES ('50900fbc-130a-4edb-9067-7bf34944d340', '2 x 3 Bhar.jpg', '2025-01-17 01:05:50.444+00', '2025-01-17 01:05:50.444+00', NULL, 'signature_small_screen', '2.0.0', '2025-01-17 01:05:50.444', 'ba8e2aae-c1ae-4f59-aafd-780f05b1bbc6');
+
+
+--
+-- Name: agreement_id_seq; Type: SEQUENCE SET; Schema: public; Owner: recharge
+--
+
+SELECT pg_catalog.setval('public.agreement_id_seq', 1, false);
+
+
+--
+-- Name: terms_and_conditions_answers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: recharge
+--
+
+SELECT pg_catalog.setval('public.terms_and_conditions_answers_id_seq', 1, false);
+
+
+--
+-- Name: terms_and_conditions_questions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: recharge
+--
+
+SELECT pg_catalog.setval('public.terms_and_conditions_questions_id_seq', 1, false);
+
+
+--
+-- Name: _prisma_migrations _prisma_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public._prisma_migrations
+    ADD CONSTRAINT _prisma_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: admin admin_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.admin
+    ADD CONSTRAINT admin_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: agreement agreement_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.agreement
+    ADD CONSTRAINT agreement_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: app_version app_version_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.app_version
+    ADD CONSTRAINT app_version_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: colours colours_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.colours
+    ADD CONSTRAINT colours_pkey PRIMARY KEY (color_id);
+
+
+--
+-- Name: customer customer_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.customer
+    ADD CONSTRAINT customer_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: detail_experience detail_experience_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.detail_experience
+    ADD CONSTRAINT detail_experience_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: experiences experiences_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.experiences
+    ADD CONSTRAINT experiences_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: experiences_properties experiences_properties_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.experiences_properties
+    ADD CONSTRAINT experiences_properties_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: firmware_version firmware_version_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.firmware_version
+    ADD CONSTRAINT firmware_version_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: group group_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public."group"
+    ADD CONSTRAINT group_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: issues issues_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.issues
+    ADD CONSTRAINT issues_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mode mode_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.mode
+    ADD CONSTRAINT mode_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: podAdmin podAdmin_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public."podAdmin"
+    ADD CONSTRAINT "podAdmin_pkey" PRIMARY KEY ("podId");
+
+
+--
+-- Name: pod_history pod_history_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.pod_history
+    ADD CONSTRAINT pod_history_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pod pod_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.pod
+    ADD CONSTRAINT pod_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pod_topics pod_topics_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.pod_topics
+    ADD CONSTRAINT pod_topics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.roles
+    ADD CONSTRAINT roles_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: terms_and_conditions_accepted terms_and_conditions_accepted_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.terms_and_conditions_accepted
+    ADD CONSTRAINT terms_and_conditions_accepted_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: terms_and_conditions_answers terms_and_conditions_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.terms_and_conditions_answers
+    ADD CONSTRAINT terms_and_conditions_answers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: terms_and_conditions terms_and_conditions_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.terms_and_conditions
+    ADD CONSTRAINT terms_and_conditions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: terms_and_conditions_questions terms_and_conditions_questions_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.terms_and_conditions_questions
+    ADD CONSTRAINT terms_and_conditions_questions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: version_big_screen version_big_screen_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.version_big_screen
+    ADD CONSTRAINT version_big_screen_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: version_mobile_api version_mobile_api_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.version_mobile_api
+    ADD CONSTRAINT version_mobile_api_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: version_small_screen version_small_screen_pkey; Type: CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.version_small_screen
+    ADD CONSTRAINT version_small_screen_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: admin_email_key; Type: INDEX; Schema: public; Owner: recharge
+--
+
+CREATE UNIQUE INDEX admin_email_key ON public.admin USING btree (email);
+
+
+--
+-- Name: agreement_idx; Type: INDEX; Schema: public; Owner: recharge
+--
+
+CREATE INDEX agreement_idx ON public.agreement USING btree (id, agreement);
+
+
+--
+-- Name: detail_experience_idx; Type: INDEX; Schema: public; Owner: recharge
+--
+
+CREATE INDEX detail_experience_idx ON public.detail_experience USING btree (id);
+
+
+--
+-- Name: experience_idx; Type: INDEX; Schema: public; Owner: recharge
+--
+
+CREATE INDEX experience_idx ON public.experiences USING btree (id);
+
+
+--
+-- Name: mode_idx; Type: INDEX; Schema: public; Owner: recharge
+--
+
+CREATE INDEX mode_idx ON public.mode USING btree (id, button_name);
+
+
+--
+-- Name: pod_history_idx; Type: INDEX; Schema: public; Owner: recharge
+--
+
+CREATE INDEX pod_history_idx ON public.pod_history USING btree (id, fk_pod_topic_id);
+
+
+--
+-- Name: pod_topics_idx; Type: INDEX; Schema: public; Owner: recharge
+--
+
+CREATE INDEX pod_topics_idx ON public.pod_topics USING btree (id);
+
+
+--
+-- Name: terms_and_conditions_accepted_idx; Type: INDEX; Schema: public; Owner: recharge
+--
+
+CREATE INDEX terms_and_conditions_accepted_idx ON public.terms_and_conditions_accepted USING btree (id, fk_user_id);
+
+
+--
+-- Name: terms_and_conditions_idx; Type: INDEX; Schema: public; Owner: recharge
+--
+
+CREATE INDEX terms_and_conditions_idx ON public.terms_and_conditions USING btree (id, terms_and_conditions);
+
+
+--
+-- Name: terms_and_conditions_questions_idx; Type: INDEX; Schema: public; Owner: recharge
+--
+
+CREATE INDEX terms_and_conditions_questions_idx ON public.terms_and_conditions_questions USING btree (id, active);
+
+
+--
+-- Name: user_email_key; Type: INDEX; Schema: public; Owner: recharge
+--
+
+CREATE UNIQUE INDEX user_email_key ON public."user" USING btree (email);
+
+
+--
+-- Name: user_idx; Type: INDEX; Schema: public; Owner: recharge
+--
+
+CREATE INDEX user_idx ON public."user" USING btree (user_id, username);
+
+
+--
+-- Name: admin admin_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.admin
+    ADD CONSTRAINT admin_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(user_id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: detail_experience detail_experience_experience_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.detail_experience
+    ADD CONSTRAINT detail_experience_experience_id_fkey FOREIGN KEY (experience_id) REFERENCES public.experiences(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: experiences experiences_mode_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.experiences
+    ADD CONSTRAINT experiences_mode_id_fkey FOREIGN KEY (mode_id) REFERENCES public.mode(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: experiences experiences_pod_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.experiences
+    ADD CONSTRAINT experiences_pod_id_fkey FOREIGN KEY (pod_id) REFERENCES public.pod(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- Name: experiences_properties experiences_properties_experience_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.experiences_properties
+    ADD CONSTRAINT experiences_properties_experience_id_fkey FOREIGN KEY (experience_id) REFERENCES public.experiences(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: pod_history fk_pod_id; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.pod_history
+    ADD CONSTRAINT fk_pod_id FOREIGN KEY (fk_pod_id) REFERENCES public.pod(id);
+
+
+--
+-- Name: pod_history fk_pod_topic_id; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.pod_history
+    ADD CONSTRAINT fk_pod_topic_id FOREIGN KEY (fk_pod_topic_id) REFERENCES public.pod_topics(id);
+
+
+--
+-- Name: terms_and_conditions_answers fk_question; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.terms_and_conditions_answers
+    ADD CONSTRAINT fk_question FOREIGN KEY (fk_question_id) REFERENCES public.terms_and_conditions_questions(id);
+
+
+--
+-- Name: terms_and_conditions_answers fk_user; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.terms_and_conditions_answers
+    ADD CONSTRAINT fk_user FOREIGN KEY (fk_user_id) REFERENCES public."user"(user_id);
+
+
+--
+-- Name: issues issues_fk_pod_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.issues
+    ADD CONSTRAINT issues_fk_pod_id_fkey FOREIGN KEY (fk_pod_id) REFERENCES public.pod(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: pod pod_fk_app_version_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.pod
+    ADD CONSTRAINT pod_fk_app_version_fkey FOREIGN KEY (fk_app_version) REFERENCES public.app_version(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: pod pod_fk_customer_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.pod
+    ADD CONSTRAINT pod_fk_customer_fkey FOREIGN KEY (fk_customer) REFERENCES public.customer(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: pod pod_fk_firmware_version_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.pod
+    ADD CONSTRAINT pod_fk_firmware_version_fkey FOREIGN KEY (fk_firmware_version) REFERENCES public.firmware_version(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: pod pod_fk_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.pod
+    ADD CONSTRAINT pod_fk_group_id_fkey FOREIGN KEY (fk_group_id) REFERENCES public."group"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: terms_and_conditions_accepted user_id_foreign_key; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.terms_and_conditions_accepted
+    ADD CONSTRAINT user_id_foreign_key FOREIGN KEY (fk_user_id) REFERENCES public."user"(user_id);
+
+
+--
+-- Name: version_big_screen version_big_screen_fk_app_version_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.version_big_screen
+    ADD CONSTRAINT version_big_screen_fk_app_version_id_fkey FOREIGN KEY (fk_app_version_id) REFERENCES public.app_version(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: version_mobile_api version_mobile_api_fk_app_version_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.version_mobile_api
+    ADD CONSTRAINT version_mobile_api_fk_app_version_id_fkey FOREIGN KEY (fk_app_version_id) REFERENCES public.app_version(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: version_small_screen version_small_screen_fk_app_version_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: recharge
+--
+
+ALTER TABLE ONLY public.version_small_screen
+    ADD CONSTRAINT version_small_screen_fk_app_version_id_fkey FOREIGN KEY (fk_app_version_id) REFERENCES public.app_version(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

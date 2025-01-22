@@ -5,9 +5,10 @@ const path = require('path');
 // Konfigurasi URL database dan output
 const config = {
     // databaseUrl: "postgresql://postgres:root@localhost:5432/local_regenesis_admin_dev",
-    databaseUrl: "postgresql://postgres:postgres@192.168.199.8:5432/regenesis_admin_dev_be",
+    databaseUrl: "postgresql://recharge:gianyar2025@194.233.88.134:5432/regenesis_adm",
+    // databaseUrl: "postgresql://postgres:postgres@192.168.199.8:5432/regenesis_admin_dev_be",
     outputDir: './dumps',
-    outputFile: 'regenesis_admin_dev_be.sql',
+    outputFile: 'regenesis_adm_before_sound',
 };
 
 if (!fs.existsSync(config.outputDir)) {
